@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SANG ET VIE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: radial-gradient(circle at top right, #4c0519, #000000); min-height: 100vh; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .page-content { display: none; }
+        .page-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-btn.active { background: rgba(255, 255, 255, 0.1); color: white; }
+        .status-pill { padding: 2px 8px; border-radius: 6px; font-size: 9px; font-weight: 800; text-transform: uppercase; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('login-modal');
+        const openBtn = document.getElementById('btn-login-ants');
+        const closeBtn = document.getElementById('close-modal');
+        const overlay = document.getElementById('modal-overlay');
+
+        if (!openBtn || !modal) return;
+
+        openBtn.onclick = (e) => {
+            e.preventDefault();
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const hideModal = () => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        };
+
+        closeBtn.onclick = hideModal;
+        overlay.onclick = hideModal;
+
+        document.onkeydown = (e) => { if (e.key === "Escape") hideModal(); };
+    });
+</script>
+ <script>
+    // Carousel Script
+    let currentBgIndex = 0;
+    const bgItems = document.querySelectorAll('.carousel-bg-item');
+    setInterval(() => {
+        bgItems[currentBgIndex].style.opacity = '0';
+        currentBgIndex = (currentBgIndex + 1) % bgItems.length;
+        bgItems[currentBgIndex].style.opacity = '1';
+    }, 5000);
+
+    // Menu Burger Script avec Animation
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const burgerIcon = mobileBtn.querySelector('i');
+
+    mobileBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        
+        if (isHidden) {
+            mobileMenu.classList.remove('hidden');
+            mobileMenu.classList.add('animate-in', 'fade-in', 'slide-in-from-top-4');
+            burgerIcon.classList.replace('fa-bars', 'fa-xmark');
+        } else {
+            mobileMenu.classList.add('hidden');
+            burgerIcon.classList.replace('fa-xmark', 'fa-bars');
+        }
+    });
+
+    // Gestion de la Modal (Agent ANTS)
+    const loginModal = document.getElementById('login-modal');
+    const closeBtn = document.getElementById('close-modal');
+    const overlay = document.getElementById('modal-overlay');
+
+    // On écoute le bouton du header ET celui du menu mobile
+    const triggerButtons = [
+        document.getElementById('btn-login-ants'),
+        document.getElementById('mobile-btn-login-ants')
+    ];
+
+    triggerButtons.forEach(btn => {
+        if(btn) {
+            btn.addEventListener('click', () => {
+                loginModal.classList.remove('hidden');
+                // Ferme le menu mobile si on ouvre la modal
+                mobileMenu.classList.add('hidden');
+                burgerIcon.classList.replace('fa-xmark', 'fa-bars');
+            });
+        }
+    });
+
+    const closeModal = () => loginModal.classList.add('hidden');
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+</script>
+
+    <script>
+    document.querySelectorAll('.filter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const filterValue = button.getAttribute('data-filter');
+        const cards = document.querySelectorAll('.blood-card');
+        const buttons = document.querySelectorAll('.filter-btn');
+
+        // 1. Mise à jour visuelle des boutons
+        buttons.forEach(btn => {
+            btn.classList.remove('bg-white', 'text-custom-red', 'active-filter');
+            btn.classList.add('text-white/80');
+        });
+        button.classList.add('bg-white', 'text-custom-red', 'active-filter');
+        button.classList.remove('text-white/80');
+
+        // 2. Filtrage des cartes
+        cards.forEach(card => {
+            const rhesus = card.getAttribute('data-rhesus');
+            
+            if (filterValue === 'all' || rhesus === filterValue) {
+                card.style.display = 'block';
+                // Petite animation d'entrée
+                card.style.opacity = '0';
+                setTimeout(() => { card.style.opacity = '1'; }, 10);
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+    </script>
+    <script>
+        function showSection(sectionId, btn) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    </script>
+    <script>
+    // 1. Fonction pour changer de page (Sidebar)
+    function showSection(sectionId, btn) {
+        // Masquer toutes les sections
+        document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+        // Afficher la section cliquée
+        const target = document.getElementById(sectionId);
+        if (target) target.classList.add('active');
+        
+        // Gérer le style du bouton actif dans la sidebar
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+    }
+
+    // 2. La fonction MAGIQUE pour l'alerte Urgence Sang
+    function genererAlerte() {
+        // On récupère les valeurs choisies par l'utilisateur
+        const groupeChoisi = document.getElementById('groupe-select').value;
+        const nombrePoches = document.getElementById('besoin-input').value || "20";
+
+        // On nettoie le texte du groupe (pour n'avoir que "O-" au lieu de "O- (Universel)")
+        const groupeNettoye = groupeChoisi.split(' ')[0];
+
+        // On injecte ces valeurs DANS le poster blanc
+        const afficheGroupe = document.getElementById('v-groupe');
+        const affichePoches = document.getElementById('v-poches');
+        
+        if(afficheGroupe) afficheGroupe.innerText = groupeNettoye;
+        if(affichePoches) affichePoches.innerText = nombrePoches;
+
+        // ON FILTRE L'AFFICHAGE :
+        // On cache le rectangle gris vide
+        const previewZone = document.getElementById('preview-alerte');
+        if(previewZone) previewZone.style.display = 'none';
+
+        // On affiche le Poster Blanc (le visuel généré)
+        const visuelZone = document.getElementById('visuel-genere');
+        if(visuelZone) {
+            visuelZone.classList.remove('hidden');
+            visuelZone.style.display = 'block';
+            
+            // Petit scroll automatique pour voir le résultat
+            visuelZone.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        console.log("Alerte générée avec succès !");
+    }
+</script>
+<script>
+function sendWhatsAppOrder() {
+    // 1. Récupération des données
+    const type = document.getElementById('order-type').value;
+    const groupe = document.getElementById('order-group').value;
+    const quantite = document.getElementById('order-qty').value;
+    const btn = event.currentTarget;
+
+    // 2. Vérification stricte
+    if (!type || !groupe || !quantite || quantite <= 0) {
+        // Effet de vibration sur le bouton si erreur
+        btn.classList.add('bg-red-600', 'text-white');
+        btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Formulaire Incomplet';
+        
+        setTimeout(() => {
+            btn.classList.remove('bg-red-600', 'text-white');
+            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg text-green-600"></i> Transmettre l\'alerte au régulateur';
+        }, 2000);
+        return;
+    }
+
+    // 3. Animation d'envoi "API Liaison"
+    const originalContent = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Cryptage & Envoi via Twilio...';
+    btn.disabled = true;
+
+    setTimeout(() => {
+        // On simule le succès
+        alert(`🚨 SYSTÈME SANG-VIE\n\nNotification envoyée au CNTS Bénin.\n\nDemande : ${quantite} poches de ${groupe} (${type})\nStatut : Délivré sur le mobile du régulateur.`);
+        
+        // Fermeture et reset
+        closeCNTS();
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+        
+        // Reset du formulaire
+        document.getElementById('order-type').value = "";
+        document.getElementById('order-group').value = "";
+        document.getElementById('order-qty').value = "";
+    }, 2500);
+}
+
+// Fonctions utilitaires
+function openCNTS() { document.getElementById('modal-cnts').classList.remove('hidden'); }
+function closeCNTS() { document.getElementById('modal-cnts').classList.add('hidden'); }
+</script>
+  </body>
+</html>
